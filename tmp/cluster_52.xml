@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+        <problemType>
+        <fleetSize>INFINITE</fleetSize>
+        <fleetComposition>HOMOGENEOUS</fleetComposition>
+    </problemType>
+        <vehicles>
+            <vehicle>
+            <id>DFT596</id>
+            <typeId>DFT596</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.18105024347827" y="31.300620060869566"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.263686" y="31.195518"/>
+            </endLocation>
+                <timeSchedule>
+                <start>18000</start>
+                <end>79200</end>
+            </timeSchedule>
+        </vehicle>
+    </vehicles>
+        <vehicleTypes>
+            <type>
+            <id>DFT596</id>
+            <capacity>1400</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+    </vehicleTypes>
+        <services>
+            <service id="Y180312162411537966" type="pickup">
+            <locationId>[x=121.209568][y=31.325103]</locationId>
+            <coord x="121.209568" y="31.325103"/>
+            <capacity-demand>26</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>66238</start>
+                    <end>80638</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312155939463253" type="pickup">
+            <locationId>[x=121.194019][y=31.31282]</locationId>
+            <coord x="121.194019" y="31.31282"/>
+            <capacity-demand>19</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>68375</start>
+                    <end>79172</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312155616344908" type="pickup">
+            <locationId>[x=121.191164][y=31.332905]</locationId>
+            <coord x="121.191164" y="31.332905"/>
+            <capacity-demand>23</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>66358</start>
+                    <end>84358</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312143821854253" type="pickup">
+            <locationId>[x=121.186029][y=31.311823]</locationId>
+            <coord x="121.186029" y="31.311823"/>
+            <capacity-demand>8</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>66300</start>
+                    <end>80700</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312135931807265" type="pickup">
+            <locationId>[x=121.197137][y=31.318068]</locationId>
+            <coord x="121.197137" y="31.318068"/>
+            <capacity-demand>252</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>60616</start>
+                    <end>86354</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312112602858666" type="pickup">
+            <locationId>[x=121.214441][y=31.321986]</locationId>
+            <coord x="121.214441" y="31.321986"/>
+            <capacity-demand>9</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>66406</start>
+                    <end>80804</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312111150270429" type="pickup">
+            <locationId>[x=121.191076][y=31.309511]</locationId>
+            <coord x="121.191076" y="31.309511"/>
+            <capacity-demand>5</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>60038</start>
+                    <end>85238</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y18031211001049821" type="pickup">
+            <locationId>[x=121.164242][y=31.331169]</locationId>
+            <coord x="121.164242" y="31.331169"/>
+            <capacity-demand>3</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>68385</start>
+                    <end>82782</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312093808997277" type="pickup">
+            <locationId>[x=121.207582][y=31.328672]</locationId>
+            <coord x="121.207582" y="31.328672"/>
+            <capacity-demand>8</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>67112</start>
+                    <end>81510</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312083805998400" type="pickup">
+            <locationId>[x=121.207582][y=31.328672]</locationId>
+            <coord x="121.207582" y="31.328672"/>
+            <capacity-demand>65</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>63478</start>
+                    <end>81474</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="WX180312164822" type="pickup">
+            <locationId>[x=121.204702][y=31.322779]</locationId>
+            <coord x="121.204702" y="31.322779"/>
+            <capacity-demand>37</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>67384</start>
+                    <end>85382</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="W180312983533" type="pickup">
+            <locationId>[x=121.192753][y=31.310015]</locationId>
+            <coord x="121.192753" y="31.310015"/>
+            <capacity-demand>45</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>61541</start>
+                    <end>72341</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="W180312954370" type="pickup">
+            <locationId>[x=121.204779][y=31.323601]</locationId>
+            <coord x="121.204779" y="31.323601"/>
+            <capacity-demand>354</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>62075</start>
+                    <end>72872</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="CKI180312886333" type="pickup">
+            <locationId>[x=121.189715][y=31.316674]</locationId>
+            <coord x="121.189715" y="31.316674"/>
+            <capacity-demand>19</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>60357</start>
+                    <end>82547</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="C180312890120" type="pickup">
+            <locationId>[x=121.152874][y=31.300363]</locationId>
+            <coord x="121.152874" y="31.300363"/>
+            <capacity-demand>7</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>65183</start>
+                    <end>83179</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="C180312886335" type="pickup">
+            <locationId>[x=121.16441][y=31.281575]</locationId>
+            <coord x="121.16441" y="31.281575"/>
+            <capacity-demand>26</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>64830</start>
+                    <end>86125</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="APP180312976555" type="pickup">
+            <locationId>[x=121.167277][y=31.296953]</locationId>
+            <coord x="121.167277" y="31.296953"/>
+            <capacity-demand>47</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>64855</start>
+                    <end>85251</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="A180312171135273745" type="pickup">
+            <locationId>[x=121.20125][y=31.316838]</locationId>
+            <coord x="121.20125" y="31.316838"/>
+            <capacity-demand>5</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>64856</start>
+                    <end>84415</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="A180312161905292127" type="pickup">
+            <locationId>[x=121.209568][y=31.325103]</locationId>
+            <coord x="121.209568" y="31.325103"/>
+            <capacity-demand>24</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>63005</start>
+                    <end>77405</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="A180312161405474445" type="pickup">
+            <locationId>[x=121.186108][y=31.283759]</locationId>
+            <coord x="121.186108" y="31.283759"/>
+            <capacity-demand>9</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>64830</start>
+                    <end>86125</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="A180312152435932156" type="pickup">
+            <locationId>[x=121.189715][y=31.316674]</locationId>
+            <coord x="121.189715" y="31.316674"/>
+            <capacity-demand>3</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>64830</start>
+                    <end>86125</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="A180312142535346496" type="pickup">
+            <locationId>[x=121.198018][y=31.316275]</locationId>
+            <coord x="121.198018" y="31.316275"/>
+            <capacity-demand>35</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>62564</start>
+                    <end>73370</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+    </services>
+</problem>

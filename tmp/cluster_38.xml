@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+        <problemType>
+        <fleetSize>INFINITE</fleetSize>
+        <fleetComposition>HOMOGENEOUS</fleetComposition>
+    </problemType>
+        <vehicles>
+            <vehicle>
+            <id>BXZ182</id>
+            <typeId>BXZ182</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.80155420833333" y="30.936841958333332"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.263686" y="31.195518"/>
+            </endLocation>
+                <timeSchedule>
+                <start>18000</start>
+                <end>79200</end>
+            </timeSchedule>
+        </vehicle>
+            <vehicle>
+            <id>BEP569</id>
+            <typeId>BEP569</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.80155420833333" y="30.936841958333332"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.263686" y="31.195518"/>
+            </endLocation>
+                <timeSchedule>
+                <start>18000</start>
+                <end>79200</end>
+            </timeSchedule>
+        </vehicle>
+    </vehicles>
+        <vehicleTypes>
+            <type>
+            <id>BXZ182</id>
+            <capacity>1300</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+            <type>
+            <id>BEP569</id>
+            <capacity>1361</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+    </vehicleTypes>
+        <services>
+            <service id="Y1803121204327300" type="pickup">
+            <locationId>[x=121.791022][y=30.937172]</locationId>
+            <coord x="121.791022" y="30.937172"/>
+            <capacity-demand>8</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>64657</start>
+                    <end>79057</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+    </services>
+</problem>
