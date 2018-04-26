@@ -166,7 +166,9 @@ class ResultReader:
 
     @staticmethod
     def read_title(line):
-        return list(map(str.strip, line.split("|")))
+        title = list(map(str.strip, line.split("|")))
+        print(title)
+        return title
 
     @staticmethod
     def read_capition(line):
@@ -191,18 +193,28 @@ class ResultReader:
         for line in f:
             line = line.strip("\n")
             if line.startswith("SLF4J"):
+                # Jsprit warnings
                 continue
             if status % 2 == 0:
+                # tabular lines
                 ResultReader.read_line(line)
                 status += 1
             elif status == 1:
+                # the name of the table
                 current['caption'] = ResultReader.read_capition(line)
-                status += 1
+                if current['caption'] == 'unassignedJobs':
+                    status += 3
+                    current['title'] = ['', 'unassignedJobs', '']
+                    current['rows'] = []
+                else:
+                    status += 1
             elif status == 3:
+                # columns names
                 current['title'] = ResultReader.read_title(line)
                 current['rows'] = []
                 status += 1
             elif status == 5:
+                # read data
                 row = ResultReader.read_row(line)
                 if row:
                     current['rows'].append(row)

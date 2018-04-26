@@ -540,7 +540,6 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
                 result = os.popen("java -jar Jspirit-core-1.0-SNAPSHOT.jar " + save_path2)
                 lines = []
                 for line in result:
-                    # print(line.strip("\n"))
                     lines.append(line)
                 dict_data = ResultReader.read(lines)
                 # print(dict_data)
@@ -550,6 +549,7 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
                 new_dict = run_jsprit(type='new')                           # 计算新增订单的线路规划
                 route[plate_num] = new_dict['detailed solution']            # 每个司机都有一个新的线路方案，最后成本增加最少的司机线路会被更新
             except Exception:
+                raise
                 continue
 
             new_cost = new_dict["solution"]['value'][0]                 # 拿到线路规划的cost
