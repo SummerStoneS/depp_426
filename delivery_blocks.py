@@ -45,12 +45,13 @@ def weekday_vehicles_simulate(weekday, history):
     return total_capacity
 
 
-def depots_vehicles_capacity(historical_data, runtime=1):
+def depots_vehicles_capacity(runtime=1):
     """
     :return: 生成每个停车点平均带的14容积车的数量
     """
     if runtime == 1:
         # 计算每天，每个点上的车辆数和capacity，最后求平均
+        historical_data = pd.read_excel(upload_path + filename_dict["processed_historical_data"])
         cluster_dict = defaultdict(list)
         for week_day in range(0, 7):
             daily_cars = weekday_vehicles_simulate(week_day, historical_data)
@@ -244,8 +245,8 @@ class EvenCluster:
         avg_cluster_size = len(points) / self.num_clusters
 
         # 两两类分组，根据每个组中两个类的距离和这个组的大小（元素数量）计算分数
-        scores = np.full((n_clusters, n_clusters), np.inf)
-        new_scores = np.full((n_clusters, n_clusters), np.inf)
+        scores = np.full((n_clusters, n_clusters), 10000)
+        new_scores = np.full((n_clusters, n_clusters), 10000)
         for i, j in triu(n_clusters):
             scores[i, j] = distances[i, j] / avg_distance + self.size_weight * np.sqrt(
                 (clusters[i].n + clusters[j].n) / avg_cluster_size)
@@ -256,12 +257,12 @@ class EvenCluster:
 
         # TODO 用上海总的送货量/num_clusters/(minor_clusters-1)
         delivery_data = get_delivery_data(runtime=2)
-        duration = (end_dt - start_dt).days
-        more_regularization_bar = round(len(delivery_data) / duration / cluster_num / (minor_clusters - 1))
+        more_regularization_bar = round(len(delivery_data) / cluster_num / (minor_clusters - 1))
         print("加入正则项的bar：{}".format(more_regularization_bar))
 
         # 聚类目标没有达成
         while n_clusters != self.num_clusters:
+            print("类数{}".format(n_clusters))
             # 选出分数最低的组，(i,j)分别是这个组中两个类的编号
             i, j = min(triu(n_clusters), key=new_scores.__getitem__)
             # 将这两个类合并
@@ -329,7 +330,7 @@ def get_delivery_data(runtime=1, time_col='派送装车开始时间', start_dt=d
         data_locations.to_excel('送货数据with经纬度.xlsx')
     else:
         data_locations = pd.read_excel('送货数据with经纬度.xlsx')
-    return data_locations
+    return data_locations[:14000]
 
 
 def get_orders_location_loads(runtime=2, weight_col='体积'):
@@ -365,17 +366,16 @@ if __name__ == '__main__':
     upload_path = './dist/'  # 保存客户上传数据
     save_file = './dist/serena/大类{}小类{}/'.format(cluster_num, minor_clusters)
 
-    historical_source = pd.read_excel(upload_path + filename_dict["processed_historical_data"])
-    depots_carnum_dict = depots_vehicles_capacity(historical_source, runtime=2)
+    depots_carnum_dict = depots_vehicles_capacity(runtime=2)
     cluster = ClusterRunner(cluster_num=cluster_num, minor_clusters=minor_clusters)
     depots_centers = cluster.load_centers(save_path=save_file + filename_dict["depots_center_location"])
     depots_center_list = get_center_list(depots_centers)
     orders_center_list, orders_loads_list = get_orders_location_loads(runtime=2)
 
-    # depots_center_list = [(1, 2), (-1, -2), (2, 5), (-2, 4), (-3, -5), (3, -8)]
-    # orders_center_list = [(2, 6), (2, 7), (1, 9), (-1, 5), (-3, 2), (-3, -4), (-1, -5), (3, -4), (2, -1)]
-    # orders_loads_list = [2, 3, 1, 0.4, 3, 2, 4, 1, 3]
-
+    # # depots_center_list = [(1, 2), (-1, -2), (2, 5), (-2, 4), (-3, -5), (3, -8)]
+    # # orders_center_list = [(2, 6), (2, 7), (1, 9), (-1, 5), (-3, 2), (-3, -4), (-1, -5), (3, -4), (2, -1)]
+    # # orders_loads_list = [2, 3, 1, 0.4, 3, 2, 4, 1, 3]
+    #
     cluster = EvenCluster(10, size_weight=0.5, cover_weight=0.5)
     cluster_points_list, cluster_depots_list, cluster_core_list = cluster.fit(orders_center_list)
     cluster_result_dict = save_to_dict(cluster_points_list, cluster_depots_list, cluster_core_list)
