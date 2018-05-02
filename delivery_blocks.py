@@ -139,7 +139,7 @@ def depots_cluster(depots_center_list, cluster_list, type='depots'):
     cluster_depots_dict = defaultdict(list)
     for depots_idx, cluster in enumerate(depots_cluster_idx):
         cluster_depots_dict[cluster].append(depots_idx)
-    pd.Series(depots_cluster_idx).to_excel(''.join(["每个",type,"属于哪个cluster.xlsx"]))
+    pd.Series(depots_cluster_idx).to_excel(''.join(["每个", type, "属于哪个cluster.xlsx"]))
     return cluster_depots_dict
 
 
@@ -255,7 +255,7 @@ class EvenCluster:
         # bar.start(max_value=n_clusters - self.num_clusters)
         # avg_loads_coverage = (sum(orders_loads_list)-sum([car_num*14 for car_num in depots_carnum_dict.values()])) / self.num_clusters
 
-        # TODO 用上海总的送货量/num_clusters/(minor_clusters-1)
+        # TODO 改成 用上海总的送货量/num_clusters
         delivery_data = get_delivery_data(runtime=2)
         more_regularization_bar = round(len(delivery_data) / cluster_num / (minor_clusters - 1))
         print("加入正则项的bar：{}".format(more_regularization_bar))
@@ -330,7 +330,7 @@ def get_delivery_data(runtime=1, time_col='派送装车开始时间', start_dt=d
         data_locations.to_excel('送货数据with经纬度.xlsx')
     else:
         data_locations = pd.read_excel('送货数据with经纬度.xlsx')
-    return data_locations[:14000]
+    return data_locations[:2000]
 
 
 def get_orders_location_loads(runtime=2, weight_col='体积'):
@@ -370,6 +370,7 @@ if __name__ == '__main__':
     cluster = ClusterRunner(cluster_num=cluster_num, minor_clusters=minor_clusters)
     depots_centers = cluster.load_centers(save_path=save_file + filename_dict["depots_center_location"])
     depots_center_list = get_center_list(depots_centers)
+
     orders_center_list, orders_loads_list = get_orders_location_loads(runtime=2)
 
     # # depots_center_list = [(1, 2), (-1, -2), (2, 5), (-2, 4), (-3, -5), (3, -8)]
