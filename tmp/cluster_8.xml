@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>DR6701</id>
-            <typeId>DR6701</typeId>
+            <id>BL5806</id>
+            <typeId>BL5806</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.27812775054704" y="31.27030659737418"/>
@@ -24,8 +24,8 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>DR6701</id>
-            <capacity>3340</capacity>
+            <id>BL5806</id>
+            <capacity>3900</capacity>
                 <costs>
                 <fixed>10000</fixed>
                 <distance>2.0</distance>
@@ -211,18 +211,6 @@
                     <timeWindow>
                     <start>62044</start>
                     <end>76440</end>
-                </timeWindow>
-            </timeWindows>
-        </service>
-            <service id="Y180312092807658761" type="pickup">
-            <locationId>[x=121.270999][y=31.243268]</locationId>
-            <coord x="121.270999" y="31.243268"/>
-            <capacity-demand>37</capacity-demand>
-            <duration>1020.0</duration>
-                <timeWindows>
-                    <timeWindow>
-                    <start>54000</start>
-                    <end>62999</end>
                 </timeWindow>
             </timeWindows>
         </service>

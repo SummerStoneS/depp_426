@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+        <problemType>
+        <fleetSize>INFINITE</fleetSize>
+        <fleetComposition>HOMOGENEOUS</fleetComposition>
+    </problemType>
+        <vehicles>
+            <vehicle>
+            <id>DH1547</id>
+            <typeId>DH1547</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.05300599137931" y="31.09098545689655"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.263686" y="31.195518"/>
+            </endLocation>
+                <timeSchedule>
+                <start>18000</start>
+                <end>79200</end>
+            </timeSchedule>
+        </vehicle>
+    </vehicles>
+        <vehicleTypes>
+            <type>
+            <id>DH1547</id>
+            <capacity>1200</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+    </vehicleTypes>
+        <services>
+            <service id="Y18031209532962540" type="pickup">
+            <locationId>[x=121.026661][y=31.113722]</locationId>
+            <coord x="121.026661" y="31.113722"/>
+            <capacity-demand>141</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>66015</start>
+                    <end>76815</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="A180312150935435681" type="pickup">
+            <locationId>[x=121.069216][y=31.093053]</locationId>
+            <coord x="121.069216" y="31.093053"/>
+            <capacity-demand>119</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>66351</start>
+                    <end>77151</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+    </services>
+</problem>

@@ -130,7 +130,7 @@ class Problem:
     def add_vehicle_type(self, vehicle_type):
         self.vehicle_types.append(vehicle_type)
 
-    def add_vehile(self, vehicle):
+    def add_vehicle(self, vehicle):
         self.vehicles.append(vehicle)
 
     def add_service(self, service):
@@ -234,7 +234,7 @@ if __name__ == '__main__':
     import os
     problem = Problem()
     problem.add_vehicle_type(VehicleType("Solomon", 200, {'fixed': 500, 'distance': 1.0, 'time': 0.0}))
-    problem.add_vehile(Vehicle('0', "Solomon", (40.0, 50.0), (70.0, 10.0), (0, 1236.0)))
+    problem.add_vehicle(Vehicle('0', "Solomon", (40.0, 50.0), (70.0, 10.0), (0, 1236.0)))
     problem.add_service(Service('35', 'pickup', 'location1', (5.0, 35.0), 10, 90.0, [(0, "1.79769E308")]))
     problem.to_xml("test.xml")
     result = os.popen("java -jar Jspirit-core-1.0-SNAPSHOT.jar test.xml")

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <problem xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com vrp_xml_schema.xsd">
+        <problemType>
+        <fleetSize>INFINITE</fleetSize>
+        <fleetComposition>HOMOGENEOUS</fleetComposition>
+    </problemType>
+        <vehicles>
+            <vehicle>
+            <id>BEW701</id>
+            <typeId>BEW701</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.543115" y="31.114767"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.289116" y="31.14384"/>
+            </endLocation>
+                <timeSchedule>
+                <start>42858</start>
+                <end>79168</end>
+            </timeSchedule>
+        </vehicle>
+    </vehicles>
+        <vehicleTypes>
+            <type>
+            <id>BEW701</id>
+            <capacity>1400</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+    </vehicleTypes>
+        <services>
+            <service id="A180312084005637818" type="pickup">
+            <locationId>[x=121.274398][y=31.367735]</locationId>
+            <coord x="121.274398" y="31.367735"/>
+            <capacity-demand>19</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>61833</start>
+                    <end>82410</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+    </services>
+</problem>

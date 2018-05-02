@@ -13,14 +13,38 @@ import os
 # step 1
 # 拿到历史数据，对历史数据做清理，查地址，对历史数据聚类, 生成停车点的经纬度
 
+cluster_num, minor_clusters = 26, 3
+upload_path = './dist/'  # 保存客户上传数据
+save_file = './dist/serena/大类{}小类{}/'.format(cluster_num, minor_clusters)  # 保存中间过程数据
+if not os.path.exists(save_file):
+    os.makedirs(save_file)
+
+
+filename_dict = {
+    "historical_data_name": "上海接货明细.xlsx",
+    "processed_historical_data": '上海接货数据with经纬度.xlsx',
+    "depots_center_location": '停车点-聚类中心location.xlsx',
+    "depots_weights": '14点后订单概率的权重列表.xlsx',
+    "dispatched_cars_capacity": "今日派车信息.xlsx",
+    "dispatch_cars_to_clusters": '每个区派车容积.xlsx',
+    "static_orders": "静态取货订单信息.xlsx",
+    "orders_with_clusters": '集中取货数据小区分派.xlsx',
+    "static_route_result": "今日静态路线规划.xlsx",
+    "dynamic_orders": "tasks.xlsx",
+    "real_time_cars_info": "cars.xlsx",
+    "dynamic_route": "动态拼单线路规划.xlsx",
+    "addin_vehicles_real": "川流车实时信息.xlsx",
+    "addin_vehicles_info": "川流车运力.xlsx",
+
+}
 
 orders_columns = ['订单号', '最早接货时间', '最晚接货时间', '开单体积', '接货地址']
 static_cars_columns = ["车牌号", "净空"]         # 上传所属分区，送货开始时间，送货结束时间
 dynamic_cars_columns = ["车牌号", '订单号', '经度', '纬度', '净空', '取货状态']
 historical_columns = ['运单号', '订单号', '最早接货时间', '最晚接货时间', '开单体积', '接货地址', '约车时间']
-# 新的release的车要加在动态拼车里
-addin_cars_columns = ["车牌号", "净空", "送货起始地址", "接货起始地址", "接货终止地址", "接货开始时间", "接货结束时间"]    # 新的release的车
-
+# 新的release的车要加在动态拼车里，从运力库找到这些临时加进来的车的信息
+addin_real_columns = ["车牌号", '经度', '纬度', '净空', '取货状态']  # 这些车一开始没有剩余待接列表
+addin_cars_columns = ["车牌号", "净空", "接货开始时间", "接货结束时间", "接货停止地址", "经纬度"]    # 新的release的车
 
 
 def log(msg):
@@ -319,7 +343,8 @@ class ClusterRunner:
                 break
         dispatch_cars = pd.DataFrame(x * cars.reshape(1, -1), index=cluster_loads.index, columns=cars_info['车牌号'])
         # print(np.dot(x, cars)-np.array(cluster_loads['sum']).reshape(-1, 1))      # print 剩余体积
-        dispatch_cars.to_excel(save_path)
+        if save_path:
+            dispatch_cars.to_excel(save_path)
         # cluster_car_number = pd.DataFrame(x, index=cluster_loads.index, columns=cars_info['车牌号'])
         # round(cluster_car_number).to_excel(save_file+"大类{}小类{}".format(self.cluster_num, self.minor_clusters)+"每个区派车0-1矩阵.xlsx")
         return dispatch_cars
@@ -383,7 +408,7 @@ def daily_route(daily_cluster, cluster_cars, depots_center, cluster_num=26, mino
         # 添加车辆信息
         for j, value in selected_cars.iteritems():                  # j:车牌号，value车容积
             problem.add_vehicle_type(VehicleType(j, int(value*100), {'fixed': 10000, 'distance': 2.0, 'time': 3.0}))
-            problem.add_vehile(Vehicle(j, j, tuple(eval(depots_center.iloc[i, 0])),
+            problem.add_vehicle(Vehicle(j, j, tuple(eval(depots_center.iloc[i, 0])),
                                        (121.263686, 31.195518), (18000, 79200)))        # id,车类型id，起始点，结束点，时间窗
         save_path2 = "./tmp/cluster_{}.xml".format(i)
         problem.to_xml(save_path2)
@@ -402,6 +427,7 @@ def daily_route(daily_cluster, cluster_cars, depots_center, cluster_num=26, mino
         detailed_solution.loc[:, 'endTime'] = detailed_solution['endTime'].fillna(0).apply(format_time)
         detailed_solution = pd.merge(detailed_solution, daily_cluster[["订单号", "接货地址"]], left_on='job', right_on='订单号', how='left')
         routing_result = pd.concat([routing_result, detailed_solution])
+        routing_result = routing_result.drop_duplicates(subset=['订单号'])
     routing_result.to_excel(save_path)
 
 
@@ -455,6 +481,7 @@ def add_old_services(jsprit_problem, driver_tasks_list, daily_cluster_data):
     task_list = pd.merge(driver_tasks_list, daily_cluster_data, left_on='订单号', right_on='订单号', how='left')  # 按订单号补充订单信息
     for row, values in task_list.iterrows():
         add_a_service(jsprit_problem, values)
+
 
 def get_cars_depots_center(dispatched_cars, depots_center):
     """
@@ -521,12 +548,12 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
                 now = now.hour * 60 * 60 + now.minute * 60 + now.second
                 problem.add_vehicle_type(VehicleType(plate_num, int(capacity * 100), {'fixed': 10000, 'distance': 2.0, 'time': 3.0}))
                 if (status == 1) or (now > 50400):         # 如果开启了取货状态或者现在已经到了14:00以后，TW是现在到晚上，经纬度是实时经纬度
-                    problem.add_vehile(Vehicle(plate_num, plate_num, (float(location[0]), float(location[1])),
-                                               (121.263686, 31.195518), (now, 72000)))  # id,车类型id，起始点，结束点，时间窗
+                    problem.add_vehicle(Vehicle(plate_num, plate_num, (float(location[0]), float(location[1])),
+                                               (121.263686, 31.195518), (now, 79200)))  # id,车类型id，起始点，结束点，时间窗
                 else:                   # 没送完货，且时间是14:00以前，经纬度是停车点的经纬度
                     future_location = cars_depots[cars_depots.index == plate_num].iloc[0]
-                    problem.add_vehile(Vehicle(plate_num, plate_num, (float(future_location[0]), float(future_location[1])),
-                                               (121.263686, 31.195518), (50400, 72000)))  # 14:00-20:00
+                    problem.add_vehicle(Vehicle(plate_num, plate_num, (float(future_location[0]), float(future_location[1])),
+                                               (121.263686, 31.195518), (50400, 79200)))  # 14:00-22:00
 
             def run_jsprit(type='new'):
                 problem = Problem()  # 新创建一个xml input模板
@@ -538,19 +565,21 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
                 save_path2 = "./tmp/{}{}.xml".format(type, plate_num)
                 problem.to_xml(save_path2)
                 result = os.popen("java -jar Jspirit-core-1.0-SNAPSHOT.jar " + save_path2)
+                # result = os.popen("java -jar Jspirit-core.jar " + save_path2)
                 lines = []
                 for line in result:
+                    print(line.strip("\n"))
                     lines.append(line)
+
                 dict_data = ResultReader.read(lines)
-                # print(dict_data)
+                print(dict_data)
                 return dict_data
 
-            try:
-                new_dict = run_jsprit(type='new')                           # 计算新增订单的线路规划
-                route[plate_num] = new_dict['detailed solution']            # 每个司机都有一个新的线路方案，最后成本增加最少的司机线路会被更新
-            except Exception:
-                raise
+            new_dict = run_jsprit(type='new')                           # 计算新增订单的线路规划
+            if int(new_dict["solution"]['value'][2]) > 0:                      # 如果新加进来订单后有unassignedJobs，说明时间窗不能满足了，把这辆车去了
                 continue
+
+            route[plate_num] = new_dict['detailed solution']            # 每个司机都有一个新的线路方案，最后成本增加最少的司机线路会被更新
 
             new_cost = new_dict["solution"]['value'][0]                 # 拿到线路规划的cost
             old_dict = run_jsprit(type='old')                           # 计算原来订单的cost
@@ -575,12 +604,12 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
                 vehicle_infos = released_cars_info[released_cars_info["车牌号"] == plate_number]
                 start_time = convert_time(vehicle_infos['接货开始时间'].iloc[0])
                 end_time = convert_time(vehicle_infos['接货停止时间'].iloc[0])
-                end_place = vehicle_infos['经纬度']
+                end_place = eval(vehicle_infos['经纬度'].iloc[0])
 
                 def add_released_driver(r_problem):
                     r_problem.add_vehicle_type(
                         VehicleType(plate_number, int(r_capacity * 100), {'fixed': 10000, 'distance': 2.0, 'time': 3.0}))
-                    r_problem.add_vehile(Vehicle(plate_number, plate_number, (float(r_location[0]), float(r_location[1])),
+                    r_problem.add_vehicle(Vehicle(plate_number, plate_number, (float(r_location[0]), float(r_location[1])),
                                                    (end_place[0], end_place[1]), (start_time, end_time)))  # id,车类型id，起始点，结束点，时间窗
 
                 def released_jsprit(type='new'):
@@ -594,26 +623,26 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
                     save_path2 = "./tmp/{}{}.xml".format(type, plate_number)
                     problem.to_xml(save_path2)
                     result = os.popen("java -jar Jspirit-core-1.0-SNAPSHOT.jar " + save_path2)
+                    # result = os.popen("java -jar Jspirit-core.jar " + save_path2)
                     lines = []
                     for line in result:
                         # print(line.strip("\n"))
                         lines.append(line)
                     dict_data = ResultReader.read(lines)
-                    # print(dict_data)
+                    print(dict_data)
                     return dict_data
 
-                try:
-                    r_new_dict = released_jsprit(type='new')  # 计算新增订单的线路规划
-                    route[plate_num] = r_new_dict['detailed solution']  # 每个司机都有一个新的线路方案，最后成本增加最少的司机线路会被更新
-                except Exception:
+                r_new_dict = released_jsprit(type='new')  # 计算新增订单的线路规划
+                if int(r_new_dict["solution"]['value'][2]) > 0:  # 如果新加进来订单后有unassignedJobs，说明时间窗不能满足了，把这辆车去了
                     continue
-
+                route[plate_num] = r_new_dict['detailed solution']  # 每个司机都有一个新的线路方案，最后成本增加最少的司机线路会被更新
                 r_new_cost = r_new_dict["solution"]['value'][0]  # 拿到线路规划的cost
                 if len(released_driver_data):
                     r_old_dict = released_jsprit(type='old')  # 计算原来订单的cost
                     r_old_cost = r_old_dict["solution"]['value'][0]
                 else:
-                    r_old_cost = 0
+                    # TODO(sometime) 这辆车的固定成本，应该是输入参数
+                    r_old_cost = 10000
                 cost[plate_number] = ((float(r_new_cost) - float(r_old_cost)), r_location, r_capacity, r_status)  # 这个司机拼入新单后的成本提升
 
         if with_addin:
@@ -655,6 +684,7 @@ def dynamic_route(test, daily_cluster, cars_depots, drivers_data, save_path='动
     final_data.loc[:, 'endTime'] = final_data['endTime'].fillna(0).apply(format_time)
     full_tasks = pd.concat([daily_cluster[['订单号', '接货地址']], test[['订单号', '接货地址']]])  # 补上中文地址名称
     final_data = pd.merge(final_data, full_tasks, how='left', left_on='job', right_on='订单号')
+    final_data = final_data.drop_duplicates(subset=['订单号'])
     final_data.to_excel(save_path)
     return final_data
 
@@ -680,12 +710,13 @@ def dispatch_cars_by_history(historical_orders, today_cars_capacity, weekday=2, 
     """
     # Step1:
     cars_info = today_cars_capacity
-    cars_info = transform_cars(cars_info, type='static')
+    # cars_info = transform_cars(cars_info, type='static')
 
     cluster = ClusterRunner(cluster_num=cluster_num, minor_clusters=minor_clusters)
     cluster.load_centers(save_path=save_file+filename_dict["depots_center_location"])
     cluster.load_historical_weights(save_path=save_file+filename_dict["depots_weights"])
-    cluster.find_cluster_cars(historical_orders, cars_info, weekday=weekday, save_path=save_path)       # 星期一
+    dispatch_cars = cluster.find_cluster_cars(historical_orders, cars_info, weekday=weekday, save_path=save_path)       # 星期一
+    return dispatch_cars
 
 
 def static_vrp(static_pickup_data, runtime=2, cluster_num=26, minor_clusters=3, save_path="今日静态路线规划.xlsx"):
@@ -745,51 +776,26 @@ def dynamic_vrp(dynamic_pickup_data, realtime_drivers_state, runtime=2, cluster_
 
 if __name__ == '__main__':
 
-    cluster_num, minor_clusters = 26, 3
-
-    upload_path = './dist/'                                                         # 保存客户上传数据
-    save_file = './dist/serena/大类{}小类{}/'.format(cluster_num, minor_clusters)   # 保存中间过程数据
-    if not os.path.exists(save_file):
-        os.makedirs(save_file)
-
-    filename_dict = {
-        "historical_data_name": "上海接货明细.xlsx",
-        "processed_historical_data": '上海接货数据with经纬度.xlsx',
-        "depots_center_location": '停车点-聚类中心location.xlsx',
-        "depots_weights": '14点后订单概率的权重列表.xlsx',
-        "dispatched_cars_capacity": "今日派车信息.xlsx",
-        "dispatch_cars_to_clusters": '每个区派车容积.xlsx',
-        "static_orders": "静态取货订单信息.xlsx",
-        "orders_with_clusters": '集中取货数据小区分派.xlsx',
-        "static_route_result": "今日静态路线规划.xlsx",
-        "dynamic_orders": "tasks.xlsx",
-        "real_time_cars_info": "cars.xlsx",
-        "dynamic_route": "动态拼单线路规划.xlsx",
-        "addin_vehicles_real": "川流车实时信息.xlsx",
-        "addin_vehicles_info": "川流车运力.xlsx",
-
-    }
-
     # Pre-Step: 根据历史数据生成停车点的经纬度，和优化派车方案时cluster的权重
-    # historical_data = process_raw(runtime=2, historical_data_path=upload_path + filename_dict["historical_data_name"],
-    #                               save_path=upload_path + filename_dict["processed_historical_data"])   # load historical orders data
+    historical_data = process_raw(runtime=2, historical_data_path=upload_path + filename_dict["historical_data_name"],
+                                  save_path=upload_path + filename_dict["processed_historical_data"])   # load historical orders data
 
-    # initial_cluster(historical_data, cluster_num=cluster_num, minor_clusters=minor_clusters,
-    #                 depots_center_path=save_file + filename_dict["depots_center_location"],  # 停车点的经纬度
-    #                 weights_path=save_file + filename_dict["depots_weights"])       # 每个小区14:00后订单的概率，概率越大的，
-    #                                                                                 # 在派车的时候要多派点容积
+    initial_cluster(historical_data, cluster_num=cluster_num, minor_clusters=minor_clusters,
+                    depots_center_path=save_file + filename_dict["depots_center_location"],  # 停车点的经纬度
+                    weights_path=save_file + filename_dict["depots_weights"])       # 每个小区14:00后订单的概率，概率越大的，
+                                                                                    # 在派车的时候要多派点容积
 
     # Step2: 凌晨生成派车方案
-    # today_car_capacity = pd.read_excel(upload_path + filename_dict["dispatched_cars_capacity"])     # 今天的运力
-    # day_of_week = 2     # 星期二
-    # dispatch_cars_by_history(historical_data, today_car_capacity, weekday=day_of_week, cluster_num=cluster_num,
-    #                          minor_clusters=minor_clusters,
-    #                          save_path=save_file + "大类{}小类{}".format(cluster_num, minor_clusters) + filename_dict["dispatch_cars_to_clusters"])
+    today_car_capacity = pd.read_excel(upload_path + filename_dict["dispatched_cars_capacity"])     # 今天的运力
+    day_of_week = 2     # 星期二
+    dispatch_cars_by_history(historical_data, today_car_capacity, weekday=day_of_week, cluster_num=cluster_num,
+                             minor_clusters=minor_clusters,
+                             save_path=save_file + "大类{}小类{}".format(cluster_num, minor_clusters) + filename_dict["dispatch_cars_to_clusters"])
 
-    # # Step3: 第一次规划取货路线(静态规划) 经纬度重新计算的话需要runtime=1
-    # initial_pickups = pd.read_excel(upload_path + filename_dict["static_orders"])
-    # static_vrp(initial_pickups, runtime=2, cluster_num=cluster_num, minor_clusters=minor_clusters,
-    #            save_path=filename_dict["static_route_result"])
+    # Step3: 第一次规划取货路线(静态规划) 经纬度重新计算的话需要runtime=1
+    initial_pickups = pd.read_excel(upload_path + filename_dict["static_orders"])
+    static_vrp(initial_pickups, runtime=2, cluster_num=cluster_num, minor_clusters=minor_clusters,
+               save_path=filename_dict["static_route_result"])
 
     # Step4: 动态拼单
     dynamic_pickups = pd.read_excel(upload_path + filename_dict["dynamic_orders"])  # 拼单

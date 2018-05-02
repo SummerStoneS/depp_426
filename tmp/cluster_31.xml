@@ -25,7 +25,7 @@
         <vehicleTypes>
             <type>
             <id>DH7286</id>
-            <capacity>3341</capacity>
+            <capacity>3340</capacity>
                 <costs>
                 <fixed>10000</fixed>
                 <distance>2.0</distance>

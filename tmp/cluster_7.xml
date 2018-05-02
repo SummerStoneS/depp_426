@@ -6,24 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>DJ2626</id>
-            <typeId>DJ2626</typeId>
-                <startLocation>
-                <id>0</id>
-                <coord x="121.32588585684431" y="31.247043918495297"/>
-            </startLocation>
-                <endLocation>
-                <id>101</id>
-                <coord x="121.263686" y="31.195518"/>
-            </endLocation>
-                <timeSchedule>
-                <start>18000</start>
-                <end>79200</end>
-            </timeSchedule>
-        </vehicle>
-            <vehicle>
-            <id>BJU322</id>
-            <typeId>BJU322</typeId>
+            <id>BEP333</id>
+            <typeId>BEP333</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.32588585684431" y="31.247043918495297"/>
@@ -40,17 +24,8 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>DJ2626</id>
-            <capacity>3900</capacity>
-                <costs>
-                <fixed>10000</fixed>
-                <distance>2.0</distance>
-                <time>3.0</time>
-            </costs>
-        </type>
-            <type>
-            <id>BJU322</id>
-            <capacity>0</capacity>
+            <id>BEP333</id>
+            <capacity>1361</capacity>
                 <costs>
                 <fixed>10000</fixed>
                 <distance>2.0</distance>

@@ -6,8 +6,24 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>DP3962</id>
-            <typeId>DP3962</typeId>
+            <id>DG7842</id>
+            <typeId>DG7842</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.4464170250896" y="31.10612553942652"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.263686" y="31.195518"/>
+            </endLocation>
+                <timeSchedule>
+                <start>18000</start>
+                <end>79200</end>
+            </timeSchedule>
+        </vehicle>
+            <vehicle>
+            <id>DL9723</id>
+            <typeId>DL9723</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.4464170250896" y="31.10612553942652"/>
@@ -24,8 +40,17 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>DP3962</id>
+            <id>DG7842</id>
             <capacity>4100</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+            <type>
+            <id>DL9723</id>
+            <capacity>0</capacity>
                 <costs>
                 <fixed>10000</fixed>
                 <distance>2.0</distance>
@@ -151,18 +176,6 @@
                     <timeWindow>
                     <start>59741</start>
                     <end>74141</end>
-                </timeWindow>
-            </timeWindows>
-        </service>
-            <service id="C180312882939" type="pickup">
-            <locationId>[x=121.486427][y=31.095171]</locationId>
-            <coord x="121.486427" y="31.095171"/>
-            <capacity-demand>21</capacity-demand>
-            <duration>1020.0</duration>
-                <timeWindows>
-                    <timeWindow>
-                    <start>54306</start>
-                    <end>72306</end>
                 </timeWindow>
             </timeWindows>
         </service>

@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BJU322</id>
-            <typeId>BJU322</typeId>
+            <id>BHE822</id>
+            <typeId>BHE822</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.048186605" y="30.887709915"/>
@@ -24,7 +24,7 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>BJU322</id>
+            <id>BHE822</id>
             <capacity>1451</capacity>
                 <costs>
                 <fixed>10000</fixed>

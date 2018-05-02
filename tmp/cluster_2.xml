@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BGA281</id>
-            <typeId>BGA281</typeId>
+            <id>BJU300</id>
+            <typeId>BJU300</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.29379510176992" y="30.937770805309736"/>
@@ -24,7 +24,7 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>BGA281</id>
+            <id>BJU300</id>
             <capacity>1451</capacity>
                 <costs>
                 <fixed>10000</fixed>

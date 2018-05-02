@@ -6,38 +6,6 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BHE822</id>
-            <typeId>BHE822</typeId>
-                <startLocation>
-                <id>0</id>
-                <coord x="121.089401536" y="31.247974688"/>
-            </startLocation>
-                <endLocation>
-                <id>101</id>
-                <coord x="121.263686" y="31.195518"/>
-            </endLocation>
-                <timeSchedule>
-                <start>18000</start>
-                <end>79200</end>
-            </timeSchedule>
-        </vehicle>
-            <vehicle>
-            <id>BJU668</id>
-            <typeId>BJU668</typeId>
-                <startLocation>
-                <id>0</id>
-                <coord x="121.089401536" y="31.247974688"/>
-            </startLocation>
-                <endLocation>
-                <id>101</id>
-                <coord x="121.263686" y="31.195518"/>
-            </endLocation>
-                <timeSchedule>
-                <start>18000</start>
-                <end>79200</end>
-            </timeSchedule>
-        </vehicle>
-            <vehicle>
             <id>EB0176</id>
             <typeId>EB0176</typeId>
                 <startLocation>
@@ -55,24 +23,6 @@
         </vehicle>
     </vehicles>
         <vehicleTypes>
-            <type>
-            <id>BHE822</id>
-            <capacity>1440</capacity>
-                <costs>
-                <fixed>10000</fixed>
-                <distance>2.0</distance>
-                <time>3.0</time>
-            </costs>
-        </type>
-            <type>
-            <id>BJU668</id>
-            <capacity>0</capacity>
-                <costs>
-                <fixed>10000</fixed>
-                <distance>2.0</distance>
-                <time>3.0</time>
-            </costs>
-        </type>
             <type>
             <id>EB0176</id>
             <capacity>1451</capacity>

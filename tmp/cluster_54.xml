@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BUC816</id>
-            <typeId>BUC816</typeId>
+            <id>BG1158</id>
+            <typeId>BG1158</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.6034580641562" y="31.256472635983265"/>
@@ -24,8 +24,8 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>BUC816</id>
-            <capacity>1200</capacity>
+            <id>BG1158</id>
+            <capacity>3888</capacity>
                 <costs>
                 <fixed>10000</fixed>
                 <distance>2.0</distance>

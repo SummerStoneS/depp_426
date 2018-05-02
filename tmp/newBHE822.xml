@@ -17,8 +17,8 @@
                 <coord x="121.263686" y="31.195518"/>
             </endLocation>
                 <timeSchedule>
-                <start>32875</start>
-                <end>72000</end>
+                <start>52968</start>
+                <end>79200</end>
             </timeSchedule>
         </vehicle>
     </vehicles>

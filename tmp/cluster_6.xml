@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BGF335</id>
-            <typeId>BGF335</typeId>
+            <id>BJG160</id>
+            <typeId>BJG160</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.30259714854111" y="31.292137623342175"/>
@@ -24,7 +24,7 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>BGF335</id>
+            <id>BJG160</id>
             <capacity>1437</capacity>
                 <costs>
                 <fixed>10000</fixed>
@@ -67,6 +67,18 @@
                     <timeWindow>
                     <start>64607</start>
                     <end>75404</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="Y180312155326277595" type="pickup">
+            <locationId>[x=121.277827][y=31.311504]</locationId>
+            <coord x="121.277827" y="31.311504"/>
+            <capacity-demand>97</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>68000</start>
+                    <end>78800</end>
                 </timeWindow>
             </timeWindows>
         </service>
@@ -211,6 +223,18 @@
                     <timeWindow>
                     <start>62919</start>
                     <end>73719</end>
+                </timeWindow>
+            </timeWindows>
+        </service>
+            <service id="W180312927801" type="pickup">
+            <locationId>[x=121.278643][y=31.311776]</locationId>
+            <coord x="121.278643" y="31.311776"/>
+            <capacity-demand>128</capacity-demand>
+            <duration>1020.0</duration>
+                <timeWindows>
+                    <timeWindow>
+                    <start>63635</start>
+                    <end>74429</end>
                 </timeWindow>
             </timeWindows>
         </service>

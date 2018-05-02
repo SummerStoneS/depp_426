@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>D44567</id>
-            <typeId>D44567</typeId>
+            <id>BQ8806</id>
+            <typeId>BQ8806</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.19563994467214" y="31.13435299180328"/>
@@ -24,7 +24,7 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>D44567</id>
+            <id>BQ8806</id>
             <capacity>3900</capacity>
                 <costs>
                 <fixed>10000</fixed>
@@ -55,18 +55,6 @@
                     <timeWindow>
                     <start>67813</start>
                     <end>78609</end>
-                </timeWindow>
-            </timeWindows>
-        </service>
-            <service id="Y180312153436710397" type="pickup">
-            <locationId>[x=121.182916][y=31.152164]</locationId>
-            <coord x="121.182916" y="31.152164"/>
-            <capacity-demand>215</capacity-demand>
-            <duration>1020.0</duration>
-                <timeWindows>
-                    <timeWindow>
-                    <start>59662</start>
-                    <end>68115</end>
                 </timeWindow>
             </timeWindows>
         </service>

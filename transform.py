@@ -45,7 +45,7 @@ def get_location(source_data, use_col='接货地址'):
     data = pd.concat([data, location], axis=1)
     if "经纬度" in source_data.columns:
         del source_data['经纬度']
-    location_data = pd.merge(source_data, data, left_on="接货地址", right_on="接货地址", how='left')
+    location_data = pd.merge(source_data, data, left_on=use_col, right_on=use_col, how='left')
     return location_data
 
 
@@ -163,7 +163,7 @@ def transform_cars(cars, type='static'):
         cars_info = cars
 
     cars_info['净空'] = cars_info['净空'].apply(fill_na_for_notnumber)                  # 处理没有净空的车
-    cars_info['净空'].fillna(14.51, inplace=True)
+    cars_info['净空'].fillna(14, inplace=True)
     convert_plate_number(cars_info, use_col='车牌号')                                  # 去掉车牌号前的“沪”字
     return cars_info
 

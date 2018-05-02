@@ -6,8 +6,24 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BEP216</id>
-            <typeId>BEP216</typeId>
+            <id>DJ1763</id>
+            <typeId>DJ1763</typeId>
+                <startLocation>
+                <id>0</id>
+                <coord x="121.06038812328767" y="30.999795773972604"/>
+            </startLocation>
+                <endLocation>
+                <id>101</id>
+                <coord x="121.263686" y="31.195518"/>
+            </endLocation>
+                <timeSchedule>
+                <start>18000</start>
+                <end>79200</end>
+            </timeSchedule>
+        </vehicle>
+            <vehicle>
+            <id>NH0038</id>
+            <typeId>NH0038</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.06038812328767" y="30.999795773972604"/>
@@ -24,7 +40,16 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>BEP216</id>
+            <id>DJ1763</id>
+            <capacity>0</capacity>
+                <costs>
+                <fixed>10000</fixed>
+                <distance>2.0</distance>
+                <time>3.0</time>
+            </costs>
+        </type>
+            <type>
+            <id>NH0038</id>
             <capacity>1361</capacity>
                 <costs>
                 <fixed>10000</fixed>

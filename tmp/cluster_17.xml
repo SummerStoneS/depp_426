@@ -6,8 +6,8 @@
     </problemType>
         <vehicles>
             <vehicle>
-            <id>BQ8806</id>
-            <typeId>BQ8806</typeId>
+            <id>BGF335</id>
+            <typeId>BGF335</typeId>
                 <startLocation>
                 <id>0</id>
                 <coord x="121.45930308695652" y="31.2622702807971"/>
@@ -24,8 +24,8 @@
     </vehicles>
         <vehicleTypes>
             <type>
-            <id>BQ8806</id>
-            <capacity>3900</capacity>
+            <id>BGF335</id>
+            <capacity>1437</capacity>
                 <costs>
                 <fixed>10000</fixed>
                 <distance>2.0</distance>
