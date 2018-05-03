@@ -206,7 +206,7 @@ class EvenCluster:
     聚类，使得每个类的装载率尽量均等
     """
 
-    def __init__(self, num_clusters, size_weight=0.5, cover_weight=0.5):
+    def __init__(self, num_clusters, size_weight=0.4, cover_weight=0.9):
         """
         Parameters
         ==========
@@ -257,7 +257,8 @@ class EvenCluster:
 
         # TODO 改成 用上海总的送货量/num_clusters
         delivery_data = get_delivery_data(runtime=2)
-        more_regularization_bar = round(len(delivery_data) / cluster_num / (minor_clusters - 1))
+        more_regularization_bar = round(len(delivery_data) / (cluster_num*1.2))
+
         print("加入正则项的bar：{}".format(more_regularization_bar))
 
         # 聚类目标没有达成
@@ -358,6 +359,24 @@ def save_to_dict(points_list, depots_list, core_list):
     return result_dict
 
 
+def result_dict_to_tw(result_dict, depots_center_df):
+    tw_result_list = []
+    for cluster_i in range(len(result_dict)):
+        core_location = result_dict[cluster_i]['core']
+        core_lon = core_location[0]
+        core_lat = core_location[1]
+        for depots_location in result_dict[cluster_i]['depots']:
+            depots_id = depots_center_df[(depots_center_df["经度"] == depots_location[0])
+                                         & (depots_center_df["纬度"] == depots_location[1])].index[0]
+            tw_result_list.append({
+                "depotId": depots_id,
+                "longitude": depots_location[0],
+                "latitude": depots_location[1],
+                "district": dict(districtId=cluster_i, longitude=core_lon, latitude=core_lat)
+            })
+    return tw_result_list
+
+
 if __name__ == '__main__':
     cluster_num, minor_clusters = 26, 3     # 接货聚停车点参数
     start_dt = datetime(2018, 3, 1)         # 送货数据开始日期
@@ -377,9 +396,11 @@ if __name__ == '__main__':
     # # orders_center_list = [(2, 6), (2, 7), (1, 9), (-1, 5), (-3, 2), (-3, -4), (-1, -5), (3, -4), (2, -1)]
     # # orders_loads_list = [2, 3, 1, 0.4, 3, 2, 4, 1, 3]
     #
-    cluster = EvenCluster(10, size_weight=0.5, cover_weight=0.5)
+    cluster = EvenCluster(9, size_weight=0.05, cover_weight=1.0)
     cluster_points_list, cluster_depots_list, cluster_core_list = cluster.fit(orders_center_list)
     cluster_result_dict = save_to_dict(cluster_points_list, cluster_depots_list, cluster_core_list)
+
+    tw_result_dict_list = result_dict_to_tw(cluster_result_dict, depots_centers)
 
 
 
