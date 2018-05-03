@@ -83,7 +83,7 @@ class Cluster:
 
     def __init__(self, points):
         self.points = points                        # 每个类里所有点
-        self.core = tuple(np.median(points, 0))     # 中心是所有点的坐标的中位数,tuple
+        self.core = tuple(np.mean(points, 0))     # 中心是所有点的坐标的中位数,tuple
         self.n = len(self.points)                   # 每个类里的点数
         self._capacity = None                       # 每个类包含的14容积车辆数
         self._orders = None                         # 每个类包含的货物体积综合
@@ -135,7 +135,7 @@ def depots_cluster(depots_center_list, cluster_list, type='depots'):
             cluster_distance_list.append(distance(depots_center, cluster_i.core))
         depots_cluster_distance_list.append(cluster_distance_list)
     depots_cluster_distance_matrix = np.array(depots_cluster_distance_list)
-    depots_cluster_idx = np.argmin(depots_cluster_distance_matrix,axis=1)
+    depots_cluster_idx = np.argmin(depots_cluster_distance_matrix, axis=1)
     cluster_depots_dict = defaultdict(list)
     for depots_idx, cluster in enumerate(depots_cluster_idx):
         cluster_depots_dict[cluster].append(depots_idx)
@@ -159,7 +159,7 @@ def get_capacity(depots_capacity_dict, depots_center_list, cluster_list):
         for depots_idx in depots_list:
             depots_capacity += depots_capacity_dict[depots_idx]
             depot_centers.append(depots_center_list[depots_idx])
-        cluster_list[cluster_i].capacity = depots_capacity*14
+        cluster_list[cluster_i].capacity = depots_capacity * 14 * ((end_dt-start_dt).days+1)    # depots_capacity*14只是每天平均的，如果用更多天的送货点聚类，需要更多天的capacity
         cluster_list[cluster_i].depots_list = depot_centers
         # assert all(x.capacity for x in cluster_list)
     return cluster_list
@@ -167,15 +167,15 @@ def get_capacity(depots_capacity_dict, depots_center_list, cluster_list):
 
 def get_delivery_loads(delivery_center_list, order_weight_list, cluster_list):
     """
-    :param delivery_center_list: list of typle
+    :param delivery_center_list: list of tuple
     :param order_weight_list: list of order_weight/float
     :param cluster_list: list of cluster object
     :return: 每个cluster的货量
     """
     cluster_orders_dict = depots_cluster(delivery_center_list, cluster_list, type='delivery_orders')
-
-    for cluster_i, orders_list in cluster_orders_dict.items():
-        orders_weight = 0
+    for cluster_i in range(len(cluster_list)):
+        orders_list = cluster_orders_dict.get(cluster_i, [])
+        orders_weight = 0.00001
         for orders_idx in orders_list:
             orders_weight += order_weight_list[orders_idx]
         cluster_list[cluster_i].orders = orders_weight
@@ -245,8 +245,8 @@ class EvenCluster:
         avg_cluster_size = len(points) / self.num_clusters
 
         # 两两类分组，根据每个组中两个类的距离和这个组的大小（元素数量）计算分数
-        scores = np.full((n_clusters, n_clusters), 10000)
-        new_scores = np.full((n_clusters, n_clusters), 10000)
+        scores = np.full((n_clusters, n_clusters), np.inf)
+        new_scores = np.full((n_clusters, n_clusters), np.inf)
         for i, j in triu(n_clusters):
             scores[i, j] = distances[i, j] / avg_distance + self.size_weight * np.sqrt(
                 (clusters[i].n + clusters[j].n) / avg_cluster_size)
@@ -255,9 +255,9 @@ class EvenCluster:
         # bar.start(max_value=n_clusters - self.num_clusters)
         # avg_loads_coverage = (sum(orders_loads_list)-sum([car_num*14 for car_num in depots_carnum_dict.values()])) / self.num_clusters
 
-        # TODO 改成 用上海总的送货量/num_clusters
-        delivery_data = get_delivery_data(runtime=2)
-        more_regularization_bar = round(len(delivery_data) / (cluster_num*1.2))
+        # delivery_data = get_delivery_data(runtime=2, time_col='派送装车开始时间', start_dt=start_dt, end_dt=end_dt)
+        # more_regularization_bar = round(len(delivery_data) / (cluster_num*1.2))
+        more_regularization_bar = round(cluster_num * minor_clusters * 0.94)
 
         print("加入正则项的bar：{}".format(more_regularization_bar))
 
@@ -303,6 +303,8 @@ class EvenCluster:
         #     bar.update(len(points) - n_clusters)
         # bar.finish()
         # 计算最后聚类效果
+        # get_capacity(depots_carnum_dict, depots_center_list, clusters)
+        # get_delivery_loads(orders_center_list, orders_loads_list, clusters)
         for cluster_i, c in enumerate(clusters):
             print("类编号:{}\t货量:{}\t车容积：{}\t货比车：{}\t包含点数：{}".format(cluster_i, c.orders, c.capacity,
                                                                   c.orders/c.capacity, c.n))
@@ -330,8 +332,10 @@ def get_delivery_data(runtime=1, time_col='派送装车开始时间', start_dt=d
         data_locations = split_location(data_locations)                  # 生成经纬度两列
         data_locations.to_excel('送货数据with经纬度.xlsx')
     else:
-        data_locations = pd.read_excel('送货数据with经纬度.xlsx')
-    return data_locations[:2000]
+        data = pd.read_excel('送货数据with经纬度.xlsx')
+        data['long_date'] = pd.to_datetime(data[time_col])
+        data_locations = data[(start_dt <= data['long_date']) & (data['long_date'] <= end_dt)]
+    return data_locations
 
 
 def get_orders_location_loads(runtime=2, weight_col='体积'):
@@ -340,26 +344,27 @@ def get_orders_location_loads(runtime=2, weight_col='体积'):
     :param weight_col: 货的体积的列名
     :return:
     """
-    delivery_data = get_delivery_data(runtime=runtime, time_col='派送装车开始时间')
+    delivery_data = get_delivery_data(runtime=runtime, time_col='派送装车开始时间', start_dt=start_dt, end_dt=end_dt)
     orders_centers_list = get_center_list(delivery_data)
     loads_list = delivery_data[weight_col].tolist()
     return orders_centers_list, loads_list
 
 
-def save_to_dict(points_list, depots_list, core_list):
+def save_to_dict(points_list, depots_list, core_list, save_name='delivery_cluster_result.json'):
     result_dict = defaultdict(dict)
     for delivery_cluster_i in range(len(points_list)):
         points_location = points_list[delivery_cluster_i]
         depots_location = depots_list[delivery_cluster_i]
         core_location = core_list[delivery_cluster_i]
         result_dict[str(delivery_cluster_i)] = dict(points=points_location, depots=depots_location, core=core_location)
-    file = open('delivery_cluster_result.json', 'w')
+    file = open(save_name, 'w')
     json.dump(result_dict, file)
     file.close()
     return result_dict
 
 
 def result_dict_to_tw(result_dict, depots_center_df):
+    result_dict = dict((int(key), value) for key, value in result_dict.items())
     tw_result_list = []
     for cluster_i in range(len(result_dict)):
         core_location = result_dict[cluster_i]['core']
@@ -380,7 +385,8 @@ def result_dict_to_tw(result_dict, depots_center_df):
 if __name__ == '__main__':
     cluster_num, minor_clusters = 26, 3     # 接货聚停车点参数
     start_dt = datetime(2018, 3, 1)         # 送货数据开始日期
-    end_dt = datetime(2018, 3, 26)          # 送货数据结束日期
+    # end_dt = datetime(2018, 3, 26)          # 送货数据结束日期
+    end_dt = datetime(2018, 3, 1)
 
     upload_path = './dist/'  # 保存客户上传数据
     save_file = './dist/serena/大类{}小类{}/'.format(cluster_num, minor_clusters)
@@ -396,11 +402,17 @@ if __name__ == '__main__':
     # # orders_center_list = [(2, 6), (2, 7), (1, 9), (-1, 5), (-3, 2), (-3, -4), (-1, -5), (3, -4), (2, -1)]
     # # orders_loads_list = [2, 3, 1, 0.4, 3, 2, 4, 1, 3]
     #
-    cluster = EvenCluster(9, size_weight=0.05, cover_weight=1.0)
+    delivery_cluster_num = 15
+    size_weight = 0.05
+    cover_weight = 1.2
+
+    cluster = EvenCluster(delivery_cluster_num, size_weight=size_weight, cover_weight=cover_weight)
     cluster_points_list, cluster_depots_list, cluster_core_list = cluster.fit(orders_center_list)
-    cluster_result_dict = save_to_dict(cluster_points_list, cluster_depots_list, cluster_core_list)
+    save_name = "{}_{}_{}_delivery_cluster_result.json".format(delivery_cluster_num, size_weight, cover_weight)
+    cluster_result_dict = save_to_dict(cluster_points_list, cluster_depots_list, cluster_core_list, save_name=save_name)
 
     tw_result_dict_list = result_dict_to_tw(cluster_result_dict, depots_centers)
+
 
 
 
